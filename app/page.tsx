@@ -2756,7 +2756,7 @@ const { error } = await supabase.auth.signUp({
     data: {
       full_name: signupName.trim(),
     },
-    emailRedirectTo: `${window.location.origin}`,
+    emailRedirectTo: `${window.location.origin}/`,
   },
 });
 

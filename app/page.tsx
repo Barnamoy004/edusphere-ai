@@ -3972,7 +3972,7 @@ onClick={async () => {
                 </div>
                 
                   <div
-  className={`absolute left-0 top-[110px] w-56 rounded-2xl border p-4 ${cardStyle}`}
+  className={`hidden md:block absolute left-0 top-[110px] w-56 rounded-2xl border p-4 ${cardStyle}`}
 >
   <div className="mb-4 flex items-center justify-between">
     <h2 className="text-sm font-semibold">Chat History</h2>
@@ -4048,7 +4048,7 @@ onClick={async () => {
   )}
 </div>
                 
-                <div className={`ml-60 flex min-h-[500px] max-w-3xl flex-col rounded-2xl border ${cardStyle}`}>
+                <div className={`mx-auto flex min-h-[500px] w-full min-w-0 max-w-3xl flex-col rounded-2xl border ${cardStyle} md:ml-60 md:w-[calc(100%-15rem)]`}>
                   <div className="flex items-center gap-3 border-b border-white/[0.08] p-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10 text-violet-500">
                       <Bot size={20} />

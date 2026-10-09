@@ -2989,6 +2989,16 @@ showToast("Login successful!", "success");
 </nav>
 
         <section className="min-w-0 flex-1">
+          <button
+  type="button"
+  onClick={() => navigateTo("Chatbot")}
+  className="fixed bottom-24 right-4 z-[60] flex items-center gap-2 rounded-full border border-violet-400/30 bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 transition hover:scale-105 active:scale-95 md:bottom-6 md:right-6"
+  aria-label="Ask EduSphere AI"
+>
+  <Bot size={21} />
+  <span>Ask EduSphere</span>
+  <span className="h-2 w-2 rounded-full bg-emerald-300" />
+</button>
           <header
             className={`sticky top-0 z-20 flex items-center justify-between gap-4 border-b px-5 py-4 backdrop-blur-xl md:px-8 ${
               isLight

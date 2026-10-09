@@ -90,11 +90,13 @@ export async function POST(request: Request) {
     const apiKey = process.env.OPENROUTER_API_KEY;
 
     if (!apiKey) {
-      return NextResponse.json({
-        reply: getFallbackReply(userMessage),
-        fallback: true,
-      });
-    }
+  console.error("OPENROUTER_API_KEY is missing");
+
+  return NextResponse.json(
+    { error: "OPENROUTER_API_KEY is missing in Vercel." },
+    { status: 500 }
+  );
+}
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
@@ -143,22 +145,29 @@ export async function POST(request: Request) {
     const reply = data.choices?.[0]?.message?.content;
 
     if (typeof reply !== "string" || !reply.trim()) {
-      return NextResponse.json({
-        reply: getFallbackReply(userMessage),
-        fallback: true,
-      });
-    }
+  console.error("OPENROUTER EMPTY REPLY:", JSON.stringify(data));
 
-    return NextResponse.json({
+  return NextResponse.json(
+    { error: "OpenRouter returned an empty AI reply." },
+    { status: 502 }
+  );
+}
+
+        return NextResponse.json({
       reply: reply.trim(),
       fallback: false,
     });
   } catch (error) {
     console.error("Chat API error:", error);
 
-    return NextResponse.json({
-      reply: getFallbackReply(userMessage),
-      fallback: true,
-    });
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown chat API error",
+      },
+      { status: 500 }
+    );
   }
 }

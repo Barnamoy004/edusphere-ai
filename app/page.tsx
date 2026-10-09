@@ -2958,6 +2958,36 @@ showToast("Login successful!", "success");
           </div>
         </aside>
 
+        <nav
+  className={`fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t px-1 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden ${
+    isLight
+      ? "border-slate-200 bg-white/95"
+      : "border-white/10 bg-[#151522]/95"
+  }`}
+>
+  {[
+    { label: "Overview", icon: LayoutDashboard },
+    { label: "My Courses", icon: BookOpen },
+    { label: "Study Goals", icon: Target },
+    { label: "Schedule", icon: CalendarDays },
+    { label: "Profile", icon: User },
+  ].map(({ label, icon: Icon }) => (
+    <button
+      key={label}
+      type="button"
+      onClick={() => navigateTo(label)}
+      className={`flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg py-2 text-[10px] ${
+        activeNav === label
+          ? "text-violet-500"
+          : mutedText
+      }`}
+    >
+      <Icon size={19} />
+      <span>{label}</span>
+    </button>
+  ))}
+</nav>
+
         <section className="min-w-0 flex-1">
           <header
             className={`sticky top-0 z-20 flex items-center justify-between gap-4 border-b px-5 py-4 backdrop-blur-xl md:px-8 ${

@@ -1772,12 +1772,13 @@ useEffect(() => {
 
   const initialUrl = new URL(window.location.href);
   
+
 const isRecoveryLink =
   initialUrl.searchParams.get("type") === "recovery" ||
-  initialUrl.hash.includes("type=recovery") ||
-  initialUrl.searchParams.has("token_hash") ||
-  initialUrl.searchParams.has("code") ||
-  new URLSearchParams(initialUrl.hash.replace(/^#/, "")).get("type") === "recovery";
+  new URLSearchParams(
+    initialUrl.hash.replace(/^#/, "")
+  ).get("type") === "recovery";
+
 
 if (isRecoveryLink) {
   setIsPasswordRecovery(true);
@@ -1839,7 +1840,7 @@ if (isRecoveryLink) {
 
         const { error: verifyError } = await supabase.auth.verifyOtp({
           token_hash: tokenHash,
-          type: "email",
+          type: "signup",
         });
 
         if (verifyError) {

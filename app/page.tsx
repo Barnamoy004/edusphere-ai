@@ -1839,7 +1839,7 @@ if (isRecoveryLink) {
 
         const { error: verifyError } = await supabase.auth.verifyOtp({
           token_hash: tokenHash,
-          type: "signup",
+          type: "email",
         });
 
         if (verifyError) {

@@ -1706,6 +1706,7 @@ export default function Home() {
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [profileMessage, setProfileMessage] = useState("");
   const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
+  const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [recoveryPassword, setRecoveryPassword] = useState("");
   const [confirmRecoveryPassword, setConfirmRecoveryPassword] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -2571,6 +2572,19 @@ filter: isLight ? "saturate(1)" : "saturate(1.2)",
       >
         Change Password
       </button>
+
+      <button
+  type="button"
+  onClick={() => {
+    setIsPasswordRecovery(false);
+    setShowSignup(false);
+    setShowForgotPassword(false);
+    setLoginPassword("");
+  }}
+  className="w-full rounded-xl border border-violet-500/30 px-4 py-3 text-sm font-semibold text-violet-500 transition hover:bg-violet-500/10"
+>
+  Go to Login
+</button>
     </div>
   </div>
 </div>

@@ -1771,14 +1771,18 @@ useEffect(() => {
   let mounted = true;
 
   const initialUrl = new URL(window.location.href);
-  const isRecoveryLink =
+  
+const isRecoveryLink =
   initialUrl.searchParams.get("type") === "recovery" ||
-  initialUrl.hash.includes("type=recovery");
+  initialUrl.hash.includes("type=recovery") ||
+  initialUrl.searchParams.has("token_hash") ||
+  initialUrl.searchParams.has("code") ||
+  new URLSearchParams(initialUrl.hash.replace(/^#/, "")).get("type") === "recovery";
 
 if (isRecoveryLink) {
   setIsPasswordRecovery(true);
-  setAuthChecking(false);
 }
+
   let handlingSignupConfirmation =
     initialUrl.searchParams.get("type") === "signup" &&
     !!initialUrl.searchParams.get("token_hash");
@@ -1792,7 +1796,7 @@ if (isRecoveryLink) {
     data: { subscription },
   } = supabase.auth.onAuthStateChange(
     (event, session) => {
-  if (!mounted || handlingSignupConfirmation) return;
+  if (!mounted || handlingSignupConfirmation || isRecoveryLink) return;
 
   if (event === "PASSWORD_RECOVERY") {
     setIsPasswordRecovery(true);
@@ -1869,6 +1873,63 @@ if (isRecoveryLink) {
       }
 
       
+
+      
+if (isRecoveryLink) {
+  const tokenHash = initialUrl.searchParams.get("token_hash");
+  const code = initialUrl.searchParams.get("code");
+  const hashParams = new URLSearchParams(
+    initialUrl.hash.replace(/^#/, "")
+  );
+
+  if (tokenHash) {
+    const { error: recoveryError } = await supabase.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "recovery",
+    });
+
+    if (recoveryError) throw recoveryError;
+  } else if (code) {
+    const { error: recoveryError } =
+      await supabase.auth.exchangeCodeForSession(code);
+
+    if (recoveryError) throw recoveryError;
+  } else if (
+    hashParams.has("access_token") &&
+    hashParams.has("refresh_token")
+  ) {
+    const { error: recoveryError } = await supabase.auth.setSession({
+      access_token: hashParams.get("access_token")!,
+      refresh_token: hashParams.get("refresh_token")!,
+    });
+
+    if (recoveryError) throw recoveryError;
+  }
+
+  const { data: recoverySession, error: sessionError } =
+    await supabase.auth.getSession();
+
+  if (sessionError) throw sessionError;
+
+  if (!recoverySession.session) {
+    throw new Error(
+      "Password reset link is invalid or expired. Request a new link."
+    );
+  }
+
+  if (!mounted) return;
+
+  setIsPasswordRecovery(true);
+  setIsLoggedIn(false);
+
+  window.history.replaceState(
+    {},
+    document.title,
+    initialUrl.pathname
+  );
+
+  return;
+}
 
       const { data, error } = await supabase.auth.getSession();
 
